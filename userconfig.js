@@ -31,6 +31,7 @@ const default_configuration = {
       gh: ["https://github.com/search?q=&type=repositories", "GitHub"],
       dd: ["https://duckduckgo.com/?q=", "DuckDuckGo"],
       gg: ["https://google.com/search?q=", "Google"],
+      xx: ["https://x.com/search?q=", "Twitter"],
     sn: ["https://soundcloud.com/search?q=", "SoundCloud"],
     },
     default: "dd",
@@ -232,15 +233,15 @@ const default_configuration = {
           name: "social media",
           links: [
             {
-              name: "telegram",
-              url: "https://web.telegram.org",
-              icon: "brand-telegram",
-              icon_color: palette.green,
+              name: "soundcloud",
+              url: "https://www.soundcloud.com/you/history",
+              icon: "brand-soundcloud",
+              icon_color: palette.peach,
             },
             {
-              name: "facebook",
-              url: "https://www.facebook.com",
-              icon: "brand-facebook",
+              name: "twitter",
+              url: "https://www.twitter.com/home",
+              icon: "brand-twitter",
               icon_color: palette.peach,
             },
             {
@@ -248,6 +249,12 @@ const default_configuration = {
               url: "https://www.reddit.com/r/unixporn",
               icon: "brand-reddit",
               icon_color: palette.red,
+            },
+            {
+              name: "telegram",
+              url: "https://web.telegram.org",
+              icon: "brand-telegram",
+              icon_color: palette.green,
             },
           ],
         },
