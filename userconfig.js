@@ -10,17 +10,18 @@ let palette = initThemeSystem(preferredLightTheme, preferredDarkTheme);
 const default_configuration = {
   overrideStorage: true,
   temperature: {
-    location: "London",
+    location: "Sydney",
     scale: "C",
   },
   clock: {
+    label: "SYD",
     format: "k:i p",
     icon_color: palette.maroon,
   },
   additionalClocks: [
     {
-      label: "UA",
-      timezone: "Europe/Kyiv",
+      label: "MSK",
+      timezone: "Europe/Moscow",
       format: "h:i",
       icon_color: palette.peach,
     },
@@ -30,6 +31,7 @@ const default_configuration = {
       gh: ["https://github.com/search?q=&type=repositories", "GitHub"],
       dd: ["https://duckduckgo.com/?q=", "DuckDuckGo"],
       gg: ["https://google.com/search?q=", "Google"],
+    sn: ["https://soundcloud.com/search?q=", "SoundCloud"],
     },
     default: "dd",
   },

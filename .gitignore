@@ -5,6 +5,7 @@
 # IDE
 .vscode
 .zed
+.pi-lens
 
 # OS
 .DS_Store

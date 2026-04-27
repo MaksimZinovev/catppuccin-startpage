@@ -49,7 +49,7 @@ class Clock extends Component {
         .clock-label {
             font: 300 9pt 'Roboto', sans-serif;
             color: ${CONFIG.palette.text};
-            margin-right: 2px;
+            margin-right: 6px;
             letter-spacing: .5px;
             white-space: nowrap;
         }
@@ -85,6 +85,7 @@ class Clock extends Component {
             <div class="clock-wrapper">
                 <span class="material-icons clock-icon">schedule</span>
                 <div id="main-clock" class="clock-item">
+                    <span class="clock-label">${CONFIG.clock.label || ''}</span>
                     <p class="clock-time"></p>
                 </div>
             </div>
