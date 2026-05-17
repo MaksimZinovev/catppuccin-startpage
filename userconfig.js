@@ -5,7 +5,7 @@
 const preferredLightTheme = latte;
 const preferredDarkTheme = mocha;
 
-let palette = initThemeSystem(preferredLightTheme, preferredDarkTheme);
+const palette = initThemeSystem(preferredLightTheme, preferredDarkTheme);
 
 const default_configuration = {
   overrideStorage: true,
@@ -32,12 +32,14 @@ const default_configuration = {
       dd: ["https://duckduckgo.com/?q=", "DuckDuckGo"],
       gg: ["https://google.com/search?q=", "Google"],
       xx: ["https://x.com/search?q=", "Twitter"],
-    sn: ["https://soundcloud.com/search?q=", "SoundCloud"],
+      sn: ["https://soundcloud.com/search?q=", "SoundCloud"],
+      fe: ["edge://favorites/?q=%s", "Edge Favorites"],
+      fc: ["chrome://bookmarks/?q=%s", "Chrome Bookmarks"],
     },
     default: "dd",
   },
   keybindings: {
-    "s": "search-bar",
+    s: "search-bar",
   },
   disabled: [],
   localIcons: true,

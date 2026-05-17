@@ -1,136 +1,167 @@
-
 // Component for rendering navigation links within tabs
 class Links extends Component {
-  /**
-   * Initialise the Links component
-   */
-  constructor() {
-    super();
-  }
+	/**
+	 * Initialise the Links component
+	 */
+	constructor() {
+		super();
+	}
 
-  /**
-   * Generates icon HTML for a link
-   * @param {Object} link - Link object containing icon properties
-   * @returns {string} HTML string for the icon or empty string
-   */
-  static getIcon(link) {
-    const defaultColor = CONFIG.palette.base;
+	/**
+	 * Generates icon HTML for a link
+	 * @param {Object} link - Link object containing icon properties
+	 * @returns {string} HTML string for the icon or empty string
+	 */
+	static getIcon(link) {
+		const defaultColor = CONFIG.palette.base;
 
-    return link.icon
-      ? `<i class="ti ti-${link.icon} link-icon"
+		return link.icon
+			? `<i class="ti ti-${link.icon} link-icon"
             style="color: ${link.icon_color ?? defaultColor}"></i>`
-      : "";
-  }
+			: "";
+	}
 
-  /**
-   * Generates HTML for all links in a specific tab
-   * @param {string} tabName - Name of the tab to render links for
-   * @param {Array} tabs - Array of tab objects
-   * @returns {string} HTML string containing all links
-   */
-  static getAll(tabName, tabs) {
-    const { categories } = tabs.find((f) => f.name === tabName);
+	/**
+	 * Generates HTML for all links in a specific tab
+	 * @param {string} tabName - Name of the tab to render links for
+	 * @param {Array} tabs - Array of tab objects
+	 * @returns {string} HTML string containing all links
+	 */
+	static getAll(tabName, tabs) {
+		const { categories } = tabs.find((f) => f.name === tabName);
 
-    return `
-      ${categories
-        .map(({ name, links }) => {
-          return `
+		const content = `${categories
+			.map(({ name, links }) => {
+				return `
           <li>
             <h1>${name}</h1>
               <div class="links-wrapper">
               ${links
-              .map(
-                (link) => `
+								.map(
+									(link) => `
                   <div class="link-info">
                     <a href="${link.url}" target="_blank">
                       ${Links.getIcon(link)}
                       ${link.name ? `<p class="link-name">${link.name}</p>` : ""}
                     </a>
                 </div>`,
-              )
-              .join("")}
+								)
+								.join("")}
             </div>
           </li>`;
-        })
-        .join("")}
-    `;
-  }
+			})
+			.join("")}`;
+
+		// Append hotkey help text to every tab
+		const hotkeys = Links.buildHotkeyHelp(CONFIG);
+		return content + hotkeys;
+	}
+
+	/**
+	 * Builds a hotkey help block from the config's keybindings and search engines
+	 * @param {Object} config - The full configuration object
+	 * @returns {string} HTML string for the hotkey help section
+	 */
+	static buildHotkeyHelp(config) {
+		const entries = [];
+
+		// Keybindings (e.g. s = search)
+		if (config.keybindings) {
+			for (const [key, action] of Object.entries(config.keybindings)) {
+				entries.push(`<kbd>${key}</kbd> ${action}`);
+			}
+		}
+
+		// Search engine prefixes (e.g. dd = DuckDuckGo)
+		if (config.search && config.search.engines) {
+			for (const [id, [, label]] of Object.entries(config.search.engines)) {
+				entries.push(`<kbd>${id}</kbd> ${label}`);
+			}
+		}
+
+		if (entries.length === 0) return "";
+
+		return `
+      <li class="hotkey-help">
+        <h1>${entries.join(" · ")}</h1>
+      </li>`;
+	}
 }
 
 /**
  * Component for rendering tab categories with background styling
  */
 class Category extends Component {
-  /**
-   * Initialise the Category component
-   */
-  constructor() {
-    super();
-  }
+	/**
+	 * Initialise the Category component
+	 */
+	constructor() {
+		super();
+	}
 
-  /**
-   * Generates background style attribute for category
-   * @param {string} url - Background image URL
-   * @returns {string} CSS style attribute string
-   */
-  static getBackgroundStyle(url) {
-    return `style="background-image: url(${url}); background-repeat: no-repeat; background-size: contain;"`;
-  }
+	/**
+	 * Generates background style attribute for category
+	 * @param {string} url - Background image URL
+	 * @returns {string} CSS style attribute string
+	 */
+	static getBackgroundStyle(url) {
+		return `style="background-image: url(${url}); background-repeat: no-repeat; background-size: contain;"`;
+	}
 
-  /**
-   * Generates HTML for all tab categories
-   * @param {Array} tabs - Array of tab objects
-   * @returns {string} HTML string containing all categories
-   */
-  static getAll(tabs) {
-    return `
+	/**
+	 * Generates HTML for all tab categories
+	 * @param {Array} tabs - Array of tab objects
+	 * @returns {string} HTML string containing all categories
+	 */
+	static getAll(tabs) {
+		return `
       ${tabs
-        .map(({ name, background_url }, index) => {
-          return `<ul class="${name}" ${Category.getBackgroundStyle(background_url)} ${index == 0 ? "active" : ""}>
+				.map(({ name, background_url }, index) => {
+					return `<ul class="${name}" ${Category.getBackgroundStyle(background_url)} ${index == 0 ? "active" : ""}>
             <div class="banner"></div>
             <div class="links">${Links.getAll(name, tabs)}</div>
           </ul>`;
-        })
-        .join("")}
+				})
+				.join("")}
     `;
-  }
+	}
 }
 
 /**
  * Main tabs component for displaying categorised links and navigation
  */
 class Tabs extends Component {
-  // CSS selector references for DOM elements
-  refs = {};
+	// CSS selector references for DOM elements
+	refs = {};
 
-  /**
-   * Initialise the tabs component with configuration
-   */
-  constructor() {
-    super();
-    this.tabs = CONFIG.tabs;
-  }
+	/**
+	 * Initialise the tabs component with configuration
+	 */
+	constructor() {
+		super();
+		this.tabs = CONFIG.tabs;
+	}
 
-  /**
-   * Returns CSS import dependencies for this component
-   * @returns {string[]} Array of CSS file paths
-   */
-  imports() {
-    return [
-      this.getIconResource('material'),
-      this.resources.icons.tabler,
-      this.getFontResource('roboto'),
-      this.getFontResource('raleway'),
-      this.getLibraryResource('awoo'),
-    ];
-  }
+	/**
+	 * Returns CSS import dependencies for this component
+	 * @returns {string[]} Array of CSS file paths
+	 */
+	imports() {
+		return [
+			this.getIconResource("material"),
+			this.resources.icons.tabler,
+			this.getFontResource("roboto"),
+			this.getFontResource("raleway"),
+			this.getLibraryResource("awoo"),
+		];
+	}
 
-  /**
-   * Generates component CSS styles
-   * @returns {string} CSS styles for the tabs component
-   */
-  style() {
-    return `
+	/**
+	 * Generates component CSS styles
+	 * @returns {string} CSS styles for the tabs component
+	 */
+	style() {
+		return `
       status-bar {
           bottom: -70px;
           height: 32px;
@@ -297,6 +328,31 @@ class Tabs extends Component {
           font-family: 'Raleway', sans-serif;
       }
 
+      .categories .links li.hotkey-help {
+          box-shadow: none;
+          margin-top: auto;
+      }
+
+      .categories .links li.hotkey-help h1 {
+          opacity: 0.35;
+          text-transform: none;
+          font-size: 12px;
+          letter-spacing: 0;
+          font-family: 'Roboto', sans-serif;
+          font-weight: 400;
+      }
+
+      .hotkey-help kbd {
+          display: inline-block;
+          padding: 1px 5px;
+          border-radius: 3px;
+          border: 1px solid ${CONFIG.palette.surface1};
+          background: ${CONFIG.palette.mantle};
+          font-family: 'Roboto', monospace;
+          font-size: 11px;
+          margin: 0 1px;
+      }
+
       .categories .link-icon {
           font-size: 27px;
           color: ${CONFIG.palette.text};
@@ -328,14 +384,14 @@ class Tabs extends Component {
           }
       }
     `;
-  }
+	}
 
-  /**
-   * Generates HTML template for the tabs component
-   * @returns {string} HTML template with panels and categories
-   */
-  template() {
-    return `
+	/**
+	 * Generates HTML template for the tabs component
+	 * @returns {string} HTML template with panels and categories
+	 */
+	template() {
+		return `
       <div id="links" class="-">
 
         <div id="panels">
@@ -347,12 +403,12 @@ class Tabs extends Component {
         </div>
       </div>
     `;
-  }
+	}
 
-  /**
-   * Component lifecycle callback when element is connected to DOM
-   */
-  connectedCallback() {
-    this.render();
-  }
+	/**
+	 * Component lifecycle callback when element is connected to DOM
+	 */
+	connectedCallback() {
+		this.render();
+	}
 }
